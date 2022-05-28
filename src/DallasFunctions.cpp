@@ -2,7 +2,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-#include "DallasMinimal.h"
+#include "DallasFunctions.h"
 
 #define ONE_WIRE_BUS D3                   // Data wire is plugged into D3 on the NodeMCU
 #define TEMPERATURE_PRECISION 9
