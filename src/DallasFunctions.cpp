@@ -29,7 +29,6 @@ void printAddress(DeviceAddress deviceAddress)        // function to print a dev
   }
 }
 
-
 void printProbe(DeviceAddress deviceAddress, char* z)   //  includes name string
 {
   float tempC = sensors.getTempC(deviceAddress);
@@ -45,11 +44,6 @@ void printDualProbes()
   Serial.print(waterTemp);
   Serial.println();
 }
-
-
-
-
-
 
 
 
@@ -86,7 +80,6 @@ void setupDallas()
   Serial.println();
 }
 
-
 void printTemperature(DeviceAddress deviceAddress)  // function to print the temperature for a device
 
 {
@@ -121,3 +114,5 @@ void sensorRequest()
   sensors.requestTemperatures();
   Serial.println("DONE");
 }
+
+

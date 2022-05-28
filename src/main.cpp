@@ -11,27 +11,16 @@
 void setup(void)
 {
   Serial.begin(9600);               //  9600 OneWire stable
-
-  setupDallas();
+  setupDallas();                    //  DallasMinimal files
 
 }
 
 
 void loop(void)
 {
+sensorRequest();                     // via OneWire bus 
+printDualProbes();                   // Dallas Temp
 
-sensorRequest();
 
-
-
-  // print the device information
-  // printData(waterProbe);
-  // printData(soilProbe);
-  //     Serial.println("***");
-  // Serial.println("probe data");
-  //   Serial.println("");
-
- // printProbe(waterProbe, "Water Probe Temp: ");
-printDualProbes();
   delay(5500);
 }
