@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
-#include "DallasFunctions.h"
+#include "DallasMinimal.h"
 
 
 
@@ -24,14 +24,6 @@ sensorRequest();
 
 
 
-  // print the device information
-  // printData(waterProbe);
-  // printData(soilProbe);
-  //     Serial.println("***");
-  // Serial.println("probe data");
-  //   Serial.println("");
-
- // printProbe(waterProbe, "Water Probe Temp: ");
 printDualProbes();
   delay(5500);
 }
