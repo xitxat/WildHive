@@ -12,8 +12,16 @@ const int WaterValue = 300; // Wet 98% @250 immersion value
 int soilMoistureValue = 0;
 int soilMoisturePercent = 0;
 
-/*     MOISTURE    */
+/*     BLINK    */
+void ledFlip(int pin)              //  BLUE led for water
+{                                  //  Yellow led for moisture                     
+         digitalWrite(pin , HIGH);
+         delay(200);
+         digitalWrite(pin , LOW);
+         delay(200);
+}
 
+/*     MOISTURE    */
 void moistureCap()
 {
     soilMoistureValue = analogRead(A0); // NodeMcu only 1 ADC (A0)
@@ -36,18 +44,7 @@ void moistureCap()
     }
 }
 
-void ledFlip(int pin)              //  BLUE led for water
-{                                  //  Yellow led for moisture                     
-         digitalWrite(pin , HIGH);
-         delay(200);
-         digitalWrite(pin , LOW);
-         delay(200);
-}
-
 /*     WATER LEVEL    */
-
-
-
 void waterAlert()
 {
     if    (digitalRead(WATER_SENSOR) == HIGH)  

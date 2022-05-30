@@ -5,10 +5,9 @@
 #define MOIST_LED    D2
 #define WATER_LED    D6
 
-
         /*     FCN protos   */
-void moistureCap();             //  Soil moisture   
-void ledFlipState(int pin);
 void ledFlip(int pin);
+void moistureCap();             //  Soil moisture   
 void waterAlert();              //  Water Level
+
 #endif
