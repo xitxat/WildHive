@@ -10,37 +10,6 @@ const long interval = 200;        // interval at which to blink (milliseconds)
 int ledState = LOW; // ledState used to set the LED
 
 
-void millisBlink(int pin, unsigned long duration )
-{
-    unsigned long currentMillis = millis();
-
-  if (currentMillis - previousMillis >= duration) 
-  {
-    // save the last time you blinked the LED
-    previousMillis = currentMillis;
-
-    // if the LED is off turn it on and vice-versa:
-    if (ledState == LOW) {
-      ledState = HIGH;
-    } else {
-      ledState = LOW;
-    }
-    // set the LED with the ledState of the variable:
-    digitalWrite(pin, ledState);
-  }
-}
-
-void ledFlipState(int pin)
-{
-    if (ledState == LOW) {
-      ledState = HIGH;
-    } else {
-      ledState = LOW;
-    }
-    // set the LED with the ledState of the variable:
-    digitalWrite(pin, ledState);
-}
-
 
 /* Moisture sensor calibration */
 const int AirValue = 600;   // Dry  2% @580
@@ -72,6 +41,17 @@ void moistureCap()
         digitalWrite(MOIST_LED, LOW);
     }
 
+}
+
+void ledFlipState(int pin)
+{
+    if (ledState == LOW) {
+      ledState = HIGH;
+    } else {
+      ledState = LOW;
+    }
+    // set the LED with the ledState of the variable:
+    digitalWrite(pin, ledState);
 }
 
 
