@@ -2,14 +2,9 @@
 
 #include "SensorsWildHive.h"
 
-/* Millis      */
-unsigned long previousMillis = 0; // will store last time LED was updated
-const long interval = 200;        // interval at which to blink (milliseconds)
-
 /* LEDs      */
-int ledState = LOW; // ledState used to set the LED
-
-
+int ledState = LOW;
+int blueLedState = LOW;
 
 /* Moisture sensor calibration */
 const int AirValue = 600;   // Dry  2% @580
@@ -32,29 +27,37 @@ void moistureCap()
 
     if (soilMoisturePercent <= 10)
     {
-
-     ledFlipState(MOIST_LED);
+        ledFlip(MOIST_LED);
         Serial.println("Soil to dry.");
     }
     else
     {
         digitalWrite(MOIST_LED, LOW);
     }
-
 }
 
-void ledFlipState(int pin)
+void ledFlip(int pin)              //  BLUE led for water
+{                                  //  Yellow led for moisture                     
+         digitalWrite(pin , HIGH);
+         delay(200);
+         digitalWrite(pin , LOW);
+         delay(200);
+}
+
+/*     WATER LEVEL    */
+
+
+
+void waterAlert()
 {
-    if (ledState == LOW) {
-      ledState = HIGH;
-    } else {
-      ledState = LOW;
+    if    (digitalRead(WATER_SENSOR) == HIGH)  
+    {
+        ledFlip(WATER_LED);
+        Serial.println("No water");
     }
-    // set the LED with the ledState of the variable:
-    digitalWrite(pin, ledState);
+    else
+    {
+        digitalWrite(WATER_LED, LOW);
+        Serial.println("Water OK");
+    }
 }
-
-
-
-
-
