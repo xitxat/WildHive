@@ -6,7 +6,7 @@
 
 /*macro definition of water sensor and the buzzer*/
 #define WATER_SENSOR D5
-#define BUZZER       D6
+#define BUZZER       D9
 
         /* FUNCTIONS */
 
@@ -38,10 +38,7 @@ boolean isExposedToWater() {
     }
 }
 
-void miliBlink()
-{
-  
-}
+
 
 
 
@@ -50,8 +47,9 @@ void setup(void)
   Serial.begin(9600);             //  9600 OneWire stable
   setupDallas();                  //  DallasMinimal files
 
-    pinMode(MOIST_LED, OUTPUT);   // Moisture alarm led
 
+    pinMode(MOIST_LED, OUTPUT);   // Moisture alarm led
+    pinMode(WATER_LED, OUTPUT);   // Moisture alarm led
 
     pins_init();                    //  water level
 
@@ -64,10 +62,12 @@ sensorRequest();                  // via OneWire bus
 printDualProbes();                // Dallas Temp
 moistureCap();                    //  Soil moisture
 
+        //digitalWrite(WATER_LED, HIGH);
 
 
-
-
+  //millisBlink(MOIST_LED, 200);
+  //millisBlink(WATER_LED, 50);
+   // digitalWrite(WATER_LED, HIGH);
 
 
 
@@ -77,5 +77,5 @@ moistureCap();                    //  Soil moisture
         soundAlarm();
     }
 
-  delay(5500);
+   delay(5000);
 }

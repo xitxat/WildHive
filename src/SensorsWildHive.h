@@ -7,4 +7,7 @@
         /*     FCN protos   */
 void moistureCap();             //  Soil moisture
 
+
+
+void millisBlink(int pin, unsigned long duration);
 #endif
