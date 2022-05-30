@@ -5,6 +5,7 @@
 /* Millis      */
 unsigned long previousMillis = 0; // will store last time LED was updated
 const long interval = 200;        // interval at which to blink (milliseconds)
+const long blinkWaterLevel = 200;        // interval at which to blink (milliseconds)
 
 /* LEDs      */
 int ledState = LOW; // ledState used to set the LED
@@ -58,3 +59,8 @@ void moistureCap()
     }
 
 }
+
+
+
+
+
