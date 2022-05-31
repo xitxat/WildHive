@@ -4,32 +4,34 @@
 
 #include "DallasFunctions.h"
 
-#define ONE_WIRE_BUS D3                   // Data wire is plugged into D3 on the NodeMCU
+#define ONE_WIRE_BUS D3 // Data wire is plugged into D3 on the NodeMCU
 #define TEMPERATURE_PRECISION 9
 
-OneWire oneWire(ONE_WIRE_BUS);            //  communicate with any OneWire device
-DallasTemperature sensors(&oneWire);      // Pass our oneWire reference to Dallas Temperature.
+OneWire oneWire(ONE_WIRE_BUS);       //  communicate with any OneWire device
+DallasTemperature sensors(&oneWire); // Pass our oneWire reference to Dallas Temperature.
 
-DeviceAddress waterProbe    = { 0x28, 0x1C, 0x0F, 0x95, 0xF0, 0x01, 0x3C, 0x63 };
-DeviceAddress soilProbe   = { 0x28, 0x3B, 0x6B, 0x95, 0xF0, 0xFF, 0x3C, 0x1B };
+DeviceAddress waterProbe = {0x28, 0x1C, 0x0F, 0x95, 0xF0, 0x01, 0x3C, 0x63};
+DeviceAddress soilProbe = {0x28, 0x3B, 0x6B, 0x95, 0xF0, 0xFF, 0x3C, 0x1B};
 
-
-void printAddress(DeviceAddress deviceAddress)        // function to print a device address
+void printAddress(DeviceAddress deviceAddress) // function to print a device address
 {
-  for (uint8_t i = 0; i < 8; i++){
-      Serial.print("0x");
+  for (uint8_t i = 0; i < 8; i++)
+  {
+    Serial.print("0x");
     // zero pad the address if necessary
-    
-    if (deviceAddress[i] < 16 ) Serial.print("0"); // <16  
+
+    if (deviceAddress[i] < 16)
+      Serial.print("0"); // <16
     Serial.print(deviceAddress[i], HEX);
 
-      if (i < 7) {
-        Serial.print(", ");
-      }
+    if (i < 7)
+    {
+      Serial.print(", ");
+    }
   }
 }
 
-void printProbe(DeviceAddress deviceAddress, char* z)   //  includes name string
+void printProbe(DeviceAddress deviceAddress, char *z) //  includes name string
 {
   float tempC = sensors.getTempC(deviceAddress);
   Serial.print(z);
@@ -37,50 +39,52 @@ void printProbe(DeviceAddress deviceAddress, char* z)   //  includes name string
   Serial.println();
 }
 
-void printDualProbes()
+void printDualProbes()                            //  Print soil and water temps
 {
-    float waterTemp = sensors.getTempC(waterProbe);
-      Serial.print("Water temp is: ");
-  Serial.print(waterTemp);
+  float waterTemp = sensors.getTempC(waterProbe);
+  Serial.print("Water temp is: ");
+  Serial.println(waterTemp);
+  float soilTemp = sensors.getTempC(soilProbe);
+  Serial.print("Soil temp is: ");
+  Serial.println(soilTemp);
+
   Serial.println();
 }
 
-
-
 void setupDallas()
 {
-  sensors.begin();                  // Start up the OneWire library
+  sensors.begin(); // Start up the OneWire library
 
-      // locate devices on the bus
+  // locate devices on the bus
   Serial.print("Locating devices...");
   Serial.print("Found ");
   Serial.print(sensors.getDeviceCount(), DEC);
   Serial.println(" devices.");
-
+delay(200);
 
   // show the addresses we found on the bus
   Serial.print("Device 0 Water Probe Address: ");
   printAddress(waterProbe);
   Serial.println();
-
+delay(200);
   Serial.print("Device 1 Soil Probe Address: ");
   printAddress(soilProbe);
   Serial.println();
+delay(200);
 
   // set the resolution to 9 bit per device
   sensors.setResolution(waterProbe, TEMPERATURE_PRECISION);
   sensors.setResolution(soilProbe, TEMPERATURE_PRECISION);
 
   Serial.print("Device 0 Water Probe Resolution: ");
-  Serial.print(sensors.getResolution(waterProbe), DEC);
-  Serial.println();
+  Serial.println(sensors.getResolution(waterProbe), DEC);
 
   Serial.print("Device 1 Soil Probe Resolution: ");
-  Serial.print(sensors.getResolution(soilProbe), DEC);
+  Serial.println(sensors.getResolution(soilProbe), DEC);
   Serial.println();
 }
 
-void printTemperature(DeviceAddress deviceAddress)  // function to print the temperature for a device
+void printTemperature(DeviceAddress deviceAddress) // function to print the temperature for a device
 
 {
   float tempC = sensors.getTempC(deviceAddress);
@@ -88,7 +92,7 @@ void printTemperature(DeviceAddress deviceAddress)  // function to print the tem
   Serial.print(tempC);
 }
 
-void printResolution(DeviceAddress deviceAddress)   // function to print a device's resolution
+void printResolution(DeviceAddress deviceAddress) // function to print a device's resolution
 
 {
   Serial.print("Resolution: ");
@@ -96,7 +100,7 @@ void printResolution(DeviceAddress deviceAddress)   // function to print a devic
   Serial.println();
 }
 
-void printData(DeviceAddress deviceAddress)         // main function to print information about a device
+void printData(DeviceAddress deviceAddress) // main function to print information about a device
 
 {
   Serial.print("Device Address: ");
@@ -114,5 +118,3 @@ void sensorRequest()
   sensors.requestTemperatures();
   Serial.println("DONE");
 }
-
-

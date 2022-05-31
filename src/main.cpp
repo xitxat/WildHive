@@ -4,35 +4,33 @@
 #include "DallasFunctions.h"
 #include "SensorsWildHive.h"
 
-/*macro definition of water sensor and the buzzer*/
+
+/* FUNCTIONS */
 
 
-        /* FUNCTIONS */
+void setup(void)
+{
+   Serial.begin(9600); //  9600 OneWire stable
+   setupDallas();      //  DallasMinimal files
 
+   pinMode(MOIST_LED, OUTPUT);   // Moisture alarm led
+   pinMode(WATER_LED, OUTPUT);   // Water alarm led
+   pinMode(PIR_LED, OUTPUT);     // PIR alarm led
+   pinMode(WATER_SENSOR, INPUT); // Water level sensor
+   pinMode(PIR_SENSOR, INPUT);   // Motion detection sensor
 
-void pins_init() {
-    pinMode(WATER_SENSOR, INPUT);
-
+   digitalWrite(PIR_LED, LOW); // turn LED OFF
 }
 
-
-
-void setup(void){
-  Serial.begin(9600);             //  9600 OneWire stable
-  setupDallas();                  //  DallasMinimal files
-
-    pinMode(MOIST_LED, OUTPUT);   // Moisture alarm led
-    pinMode(WATER_LED, OUTPUT);   // Water alarm led
-
-    pins_init();                    //  water level
-}
-
-void loop(void){
-sensorRequest();                  // via OneWire bus 
-printDualProbes();                // Dallas Temp
-moistureCap();                    //  Soil moisture
+void loop(void)
+{
+   sensorRequest();   // via OneWire bus
+   printDualProbes(); // Dallas Temp
+   soilAlert();       //  Soil moisture
    delay(2000);
-waterAlert();
-
+   waterAlert();
    delay(2000);
+   detectMotion();
+
+
 }
