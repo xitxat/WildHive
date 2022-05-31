@@ -13,6 +13,8 @@ DallasTemperature sensors(&oneWire); // Pass our oneWire reference to Dallas Tem
 DeviceAddress waterProbe = {0x28, 0x1C, 0x0F, 0x95, 0xF0, 0x01, 0x3C, 0x63};
 DeviceAddress soilProbe = {0x28, 0x3B, 0x6B, 0x95, 0xF0, 0xFF, 0x3C, 0x1B};
 
+float waterTemp = 0.0;
+
 void printAddress(DeviceAddress deviceAddress) // function to print a device address
 {
   for (uint8_t i = 0; i < 8; i++)
@@ -41,7 +43,7 @@ void printProbe(DeviceAddress deviceAddress, char *z) //  includes name string
 
 void printDualProbes()                            //  Print soil and water temps
 {
-  float waterTemp = sensors.getTempC(waterProbe);
+  waterTemp = sensors.getTempC(waterProbe);
   Serial.print("Water temp is: ");
   Serial.println(waterTemp);
   float soilTemp = sensors.getTempC(soilProbe);
