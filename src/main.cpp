@@ -16,8 +16,13 @@ WiFiEventHandler wifiConnectHandler;
 WiFiEventHandler wifiDisconnectHandler;
 Ticker wifiReconnectTimer;
 
-unsigned long previousMillis // Stores last time temperature was published
-const long mqttPubInterval = 30000;      // ms.Interval at which to publish sensor readings via MQTT
+unsigned long previousMillis = 0;       // Stores last time ALL mqtt data was published
+unsigned long previousMotionMillis = 0; // Stores last time MOTION was published
+
+const long mqttPubInterval = 30000;     // ms.Interval at which to publish sensor readings via MQTT
+const long motionInterval = 5000;       // ms.Interval at which to publish sensor readings via MQTT
+
+
 
 /* FUNCTIONS */
 
@@ -123,6 +128,8 @@ void loop(void)
   //******************
 
   unsigned long currentMillis = millis(); // Publishes a new MQTT message (mqttPubInterval = 10 seconds)
+  unsigned long currentMotionMillis = millis(); // Publishes a new MQTT message (mqttPubInterval = 10 seconds)
+
   if (currentMillis - previousMillis >= mqttPubInterval)
   { // Save the last time a new reading was published
 
@@ -156,4 +163,17 @@ void loop(void)
     Serial.printf("Message: %d \n", pirVal);
 
   } // X millis mqtt send timer
+
+  if (currentMotionMillis - previousMotionMillis >= motionInterval)
+  { // Save the last time a new reading was published
+
+    previousMotionMillis = currentMotionMillis;
+
+        // Motion Detection.     Pub  MQTT message on topic nodemcu/wildhive/motion_detect
+    uint16_t packetIdPub4 = mqttClient.publish(MQTT_PUB_MOTION_DETECT, 1, true, String(pirVal).c_str());
+    Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_MOTION_DETECT, packetIdPub4);
+    Serial.printf("Message: %d \n", pirVal);
+  }
+
+
 }
