@@ -16,8 +16,8 @@ WiFiEventHandler wifiConnectHandler;
 WiFiEventHandler wifiDisconnectHandler;
 Ticker wifiReconnectTimer;
 
-unsigned long previousMillis = 0; // Stores last time temperature was published
-const long interval = 60000;      // Interval at which to publish sensor readings     RENAME to pubInterval
+unsigned long previousMillis // Stores last time temperature was published
+const long mqttPubInterval = 30000;      // ms.Interval at which to publish sensor readings via MQTT
 
 /* FUNCTIONS */
 
@@ -120,37 +120,37 @@ void loop(void)
   waterAlert();
   delay(2000);
   detectMotion();
-  //********************
+  //******************
 
-  unsigned long currentMillis = millis(); // Publishes a new MQTT message (interval = 10 seconds)
-  if (currentMillis - previousMillis >= interval)
+  unsigned long currentMillis = millis(); // Publishes a new MQTT message (mqttPubInterval = 10 seconds)
+  if (currentMillis - previousMillis >= mqttPubInterval)
   { // Save the last time a new reading was published
 
     previousMillis = currentMillis;
     // %d int, %f, %.3f float to 3 decimal places
     // ref: \\Summit\Code Snippits>Variable Symbols printf.docx
 
-    // Soil Temperature.    Pub  MQTT message on topic nodemcu/dallas/temperature_soil
+    // Soil Temperature.    Pub  MQTT message on topic nodemcu/wildhive/dallas/temperature_soil
     uint16_t packetIdPub1 = mqttClient.publish(MQTT_PUB_SOIL_TEMP, 1, true, String(soilTemp).c_str());
     Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_SOIL_TEMP, packetIdPub1);
     Serial.printf("Message: %.2f \n", soilTemp);
 
-    // Water Temperature.   Pub MQTT message on topic nodemcu/dallas/temperature_water
+    // Water Temperature.   Pub MQTT message on topic nodemcu/wildhive/dallas/temperature_water
     uint16_t packetIdPub2 = mqttClient.publish(MQTT_PUB_WATER_TEMP, 1, true, String(waterTemp).c_str());
     Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_WATER_TEMP, packetIdPub2);
     Serial.printf("Message: %.2f \n", waterTemp);
 
-    // Water Level.         Pub MQTT message on topic nodemcu/level/level_water
+    // Water Level.         Pub MQTT message on topic nodemcu/wildhive/level/level_water
     uint16_t packetIdPub3 = mqttClient.publish(MQTT_PUB_WATER_LEVEL, 1, true, String(waterLevelValue).c_str());
     Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_WATER_LEVEL, packetIdPub3);
     Serial.printf("Message: %d \n", waterLevelValue);
 
-    // Moisture Level.      Pub MQTT message on topic nodemcu/level/level_moisture
+    // Moisture Level.      Pub MQTT message on topic nodemcu/wildhive/level/level_moisture
     uint16_t packetIdPub7 = mqttClient.publish(MQTT_PUB_MOISTURE_LEVEL, 1, true, String(soilMoisturePercent).c_str());
     Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_MOISTURE_LEVEL, packetIdPub7);
     Serial.printf("Message: %d \n", soilMoisturePercent);
 
-    // Motion Detection.     Pub  MQTT message on topic nodemcu/motion_detect
+    // Motion Detection.     Pub  MQTT message on topic nodemcu/wildhive/motion_detect
     uint16_t packetIdPub4 = mqttClient.publish(MQTT_PUB_MOTION_DETECT, 1, true, String(pirVal).c_str());
     Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_MOTION_DETECT, packetIdPub4);
     Serial.printf("Message: %d \n", pirVal);
