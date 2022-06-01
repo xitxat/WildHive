@@ -21,8 +21,6 @@ Ticker wifiReconnectTimer;
 unsigned long previousMillis = 0;   // Stores last time temperature was published
 const long interval = 60000;        // Interval at which to publish sensor readings     RENAME to pubInterval
 
-//  float waterTemp = 0.0;
-// float waterTemp;
 
 
 /* FUNCTIONS */
@@ -73,25 +71,7 @@ void onWifiDisconnect(const WiFiEventStationModeDisconnected& event) {
   wifiReconnectTimer.once(2, connectToWifi);
 }
 
-
-
-void setup(void)
-{
-   Serial.begin(9600); //  9600 OneWire stable
-     while (!Serial);
-   ;
-   setupDallas();      //  DallasMinimal files
-
-   pinMode(MOIST_LED, OUTPUT);   // Moisture alarm led
-   pinMode(WATER_LED, OUTPUT);   // Water alarm led
-   pinMode(PIR_LED, OUTPUT);     // PIR alarm led
-   pinMode(WATER_SENSOR, INPUT); // Water level sensor
-   pinMode(PIR_SENSOR, INPUT);   // Motion detection sensor
-
-   digitalWrite(PIR_LED, LOW); // turn LED OFF
-
-   //********************
-
+void setupMqtt(){
   wifiConnectHandler = WiFi.onStationModeGotIP(onWifiConnect);
   wifiDisconnectHandler = WiFi.onStationModeDisconnected(onWifiDisconnect);
 
@@ -101,6 +81,28 @@ void setup(void)
   mqttClient.setServer(MQTT_HOST, MQTT_PORT);
 
   connectToWifi();
+}
+
+void setup(void)
+{
+   Serial.begin(9600); //  OneWire stable @ 9600 
+     while (!Serial);
+   ;
+
+   pinMode(MOIST_LED, OUTPUT);   // Moisture alarm led
+   pinMode(WATER_LED, OUTPUT);   // Water alarm led
+   pinMode(PIR_LED, OUTPUT);     // PIR alarm led
+   pinMode(WATER_SENSOR, INPUT); // Water level sensor
+   pinMode(PIR_SENSOR, INPUT);   // Motion detection sensor
+
+   digitalWrite(PIR_LED, LOW); // turn LED OFF
+
+  setupDallas();      //  DallasMinimal files
+  setupMqtt();        //  WiFi & MQTT
+
+   //********************
+
+
 
 }
 
@@ -123,28 +125,28 @@ void loop(void)
         // ref: \\Summit\Code Snippits>Variable Symbols printf.docx
 
     
-       // Pub  MQTT message on topic espint/bme680/temperature
+    // Soil Temperature.    Pub  MQTT message on topic Nodemcu/dallas/temperature_soil
     uint16_t packetIdPub1 = mqttClient.publish(MQTT_PUB_SOIL_TEMP , 1, true, String(soilTemp).c_str());
     Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_SOIL_TEMP , packetIdPub1);
     Serial.printf("Message: %.2f \n", soilTemp);
 
-    // Pub MQTT message on topic espint/bme680/pressure
+    // Water Temperature.   Pub MQTT message on topic Nodemcu/dallas/temperature_water
     uint16_t packetIdPub2 = mqttClient.publish(MQTT_PUB_WATER_TEMP , 1, true, String(waterTemp).c_str());
     Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_WATER_TEMP , packetIdPub2);
     Serial.printf("Message: %.2f \n", waterTemp);
 
-        // Pub MQTT message on topic espint/bme680/humidity
+    // Water Level.         Pub MQTT message on topic Nodemcu/level/level_water
     uint16_t packetIdPub3 = mqttClient.publish(MQTT_PUB_WATER_LEVEL, 1, true, String(waterLevelValue).c_str());
     Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_WATER_LEVEL, packetIdPub3);
     Serial.printf("Message: %d \n", waterLevelValue);
 
-        // Pub MQTT message on topic espint/bme680/gas  pubID 7
+    // Moisture Level.      Pub MQTT message on topic Nodemcu/level/level_moisture
     uint16_t packetIdPub7 = mqttClient.publish(MQTT_PUB_MOISTURE_LEVEL, 1, true, String(soilMoisturePercent).c_str());
     Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_MOISTURE_LEVEL, packetIdPub7);
     Serial.printf("Message: %d \n", soilMoisturePercent);
     
 
-        // Pub  MQTT message on topic espint/spg30/voc  
+    // Motion Detection.     Pub  MQTT message on topic Nodemcu/motion_detect 
     uint16_t packetIdPub4 = mqttClient.publish(MQTT_PUB_MOTION_DETECT, 1, true, String(pirVal).c_str());
     Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_MOTION_DETECT, packetIdPub4);
     Serial.printf("Message: %d \n", pirVal);
