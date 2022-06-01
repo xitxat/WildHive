@@ -10,6 +10,7 @@
 #include "mqttNodeRed.h"
 
 
+
 AsyncMqttClient mqttClient;
 Ticker mqttReconnectTimer;
 
@@ -20,27 +21,11 @@ Ticker wifiReconnectTimer;
 unsigned long previousMillis = 0;   // Stores last time temperature was published
 const long interval = 60000;        // Interval at which to publish sensor readings     RENAME to pubInterval
 
-
+//  float waterTemp = 0.0;
+// float waterTemp;
 
 
 /* FUNCTIONS */
-
-/*  WIFI  */
-void connectToWifi() {
-  Serial.println("Connecting to Wi-Fi...");
-  WiFi.begin(SECRET_SSID, SECRET_PASS); //mod
-}
-
-void onWifiConnect(const WiFiEventStationModeGotIP& event) {
-  Serial.println("Connected to Wi-Fi.");
-  connectToMqtt();
-}
-
-void onWifiDisconnect(const WiFiEventStationModeDisconnected& event) {
-  Serial.println("Disconnected from Wi-Fi.");
-  mqttReconnectTimer.detach(); // ensure we don't reconnect to MQTT while reconnecting to Wi-Fi
-  wifiReconnectTimer.once(2, connectToWifi);
-}
 
 /*  MQTT  */
 void connectToMqtt() {
@@ -67,6 +52,25 @@ void onMqttPublish(uint16_t packetId) {
   Serial.print("  packetId: ");
   Serial.println(packetId);
   //tree = packetId ;
+}
+
+
+
+/*  WIFI  */
+void connectToWifi() {
+  Serial.println("Connecting to Wi-Fi...");
+  WiFi.begin(SECRET_SSID, SECRET_PASS); //mod
+}
+
+void onWifiConnect(const WiFiEventStationModeGotIP& event) {
+  Serial.println("Connected to Wi-Fi.");
+  connectToMqtt();
+}
+
+void onWifiDisconnect(const WiFiEventStationModeDisconnected& event) {
+  Serial.println("Disconnected from Wi-Fi.");
+  mqttReconnectTimer.detach(); // ensure we don't reconnect to MQTT while reconnecting to Wi-Fi
+  wifiReconnectTimer.once(2, connectToWifi);
 }
 
 
@@ -115,7 +119,10 @@ void loop(void)
   if (currentMillis - previousMillis >= interval) {   // Save the last time a new reading was published
 
     previousMillis = currentMillis;
+        // %d int, %f, %.3f float to 3 decimal places
+        // ref: \\Summit\Code Snippits>Variable Symbols printf.docx
 
+    
        // Pub  MQTT message on topic espint/bme680/temperature
     uint16_t packetIdPub1 = mqttClient.publish(MQTT_PUB_SOIL_TEMP , 1, true, String(soilTemp).c_str());
     Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_SOIL_TEMP , packetIdPub1);
@@ -124,23 +131,23 @@ void loop(void)
     // Pub MQTT message on topic espint/bme680/pressure
     uint16_t packetIdPub2 = mqttClient.publish(MQTT_PUB_WATER_TEMP , 1, true, String(waterTemp).c_str());
     Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_WATER_TEMP , packetIdPub2);
-    Serial.printf("Message: %.3f \n", waterTemp);
+    Serial.printf("Message: %.2f \n", waterTemp);
 
         // Pub MQTT message on topic espint/bme680/humidity
     uint16_t packetIdPub3 = mqttClient.publish(MQTT_PUB_WATER_LEVEL, 1, true, String(waterLevelValue).c_str());
     Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_WATER_LEVEL, packetIdPub3);
-    Serial.printf("Message: %.3f \n", waterLevelValue);
+    Serial.printf("Message: %d \n", waterLevelValue);
 
         // Pub MQTT message on topic espint/bme680/gas  pubID 7
     uint16_t packetIdPub7 = mqttClient.publish(MQTT_PUB_MOISTURE_LEVEL, 1, true, String(soilMoisturePercent).c_str());
     Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_MOISTURE_LEVEL, packetIdPub7);
-    Serial.printf("Message: %.3f \n", soilMoisturePercent);
+    Serial.printf("Message: %d \n", soilMoisturePercent);
     
 
         // Pub  MQTT message on topic espint/spg30/voc  
     uint16_t packetIdPub4 = mqttClient.publish(MQTT_PUB_MOTION_DETECT, 1, true, String(pirVal).c_str());
     Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_MOTION_DETECT, packetIdPub4);
-    Serial.printf("Message: %.2f \n", pirVal);
+    Serial.printf("Message: %d \n", pirVal);
 
 
 

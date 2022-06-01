@@ -10,10 +10,12 @@ int pirState = LOW;     // WHITE. Motion by default no motion detected
 const int AirValue = 600;   // Dry  2% @580
 const int WaterValue = 300; // Wet 98% @250 immersion value
 int soilMoistureValue = 0;
-int soilMoisturePercent = 0;
-/* MQTT DATA    */
-int pirVal = 0;                 // variable to store PIR sensor status (value)
-int waterLevelValue = 0;
+
+    // declared EXTERN in .h / defined here becaude of link error
+ int pirVal = 0;              // variable to store PIR sensor status (value)
+ int waterLevelValue = 0;
+ int soilMoisturePercent = 0;
+
 
 
 /*     BLINK    */

@@ -1,6 +1,11 @@
 #ifndef DALLAS_FUNCTIONS_H
 #define DALLAS_FUNCTIONS_H
 
+extern float waterTemp;
+extern float soilTemp;
+
+
+
 void setupDallas();
 void printDualProbes();
 void sensorRequest();

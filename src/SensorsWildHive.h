@@ -6,7 +6,12 @@
 
 #define MOIST_LED    D5  
 #define WATER_LED    D6
-#define PIR_LED      D7                // the pin that the LED is atteched to
+#define PIR_LED      D7         // the pin that the LED is atteched to
+
+        /* MQTT DATA    */      // Pure decleration. Solves OOScope  error in mqtt PUB statements.            
+extern int pirVal;              // variable to store PIR sensor status (value)
+extern int waterLevelValue;
+extern int soilMoisturePercent;
 
         /*     FCN protos   */
 void ledFlip(int pin);          //  Blink
